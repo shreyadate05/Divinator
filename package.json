@@ -1,0 +1,16 @@
+{
+  "name": "divinator",
+  "version": "1.0.0",
+  "description": "using climate change to predict natural calamities",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "mongoose": "^5.10.15",
+    "twit": "^2.2.11"
+  }
+}
