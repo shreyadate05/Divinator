@@ -13,6 +13,11 @@ const Tweet = new Schema({
         type: Array,
         required: false
     },
+
+    tweetTokens : {
+        type: Array,
+        required: true
+    },
     
     location : {
         type : String,

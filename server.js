@@ -6,7 +6,9 @@ var config = require('./config');
 var T = new Twit(config);
 const Tweet = require('./Tweet')
 
-
+var natural = require('natural');
+var tokenizer = new natural.WordTokenizer();
+natural.PorterStemmer.attach();
 
 const db = config.mongoURI
 mongoose
@@ -14,22 +16,6 @@ mongoose
     .then(() => console.log("MongoDB connected"))
     .catch((err) => console.log("Error: ", error));
 
-function tweetSearch() {
-
-    var searchParams =  { 
-        q: 'banana since:2011-07-11', 
-        count: 100 
-    }
-    
-    function gotData(err, data, response) {
-        var tweets = data.statuses;
-        for (var i = 0; i < tweets.length; i++) {
-            console.log(tweets[i].text);
-        }
-    }
-    
-    T.get('search/tweets', searchParams, gotData);
-}
 
 function tweetIt() {
     var r = Math.floor(Math.random()*100);
@@ -52,17 +38,20 @@ function populateDB() {
 
     var trackList = ["#climatechange", "#climatechangeisreal", "#actonclimate", "#globalwarming", "#climatechangehoax", 
                  "#climatedeniers", "#climatechangeisfalse", "#globalwarminghoax", "#climatechangenotreal", "climate change", 
-                 "global warming", "climate hoax", "lightningstrike", "wildfires", "glassfires", "hurricane", "blizzards", "wildfires"];
+                 "global warming", "climate hoax", "extreme weather", "ozone layer", "ice loss", "climate models", "sea levels", 
+                 "lightningstrike", "wildfires", "glassfires", "hurricane", "blizzards", "wildfires", "ClimateStrike", "ClimateAction", "water levels",
+                "save the earth", "mother earth", "#motherearth", "savemotherearth"];
 
     function addToDB(data, err) { 
-        console.log(data.entities);
+        var tokens = data.text.tokenizeAndStem();
         const newTweet = new Tweet({
             tweet: data.text,
             hashtags: data.entities.hashtags,
             created_at: data.created_at,
             name: data.user.name,
             location: data.user.location,
-            verified: data.user.verified
+            verified: data.user.verified,
+            tweetTokens: tokens
         });
         newTweet.save()
                 .then((data) => console.log("Saved a tweet to DB"));
@@ -74,3 +63,9 @@ function populateDB() {
 
 // setInterval(tweetIt, 1000*60*1);
 populateDB();
+processDB();
+
+function processDB() {
+    console.log("Hey");
+    
+}
