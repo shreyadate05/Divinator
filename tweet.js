@@ -2,26 +2,21 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 mongoose.set('useFindAndModify', false);
 
-const tweetData = new Schema({
+const Tweet = new Schema({
 
     name : {
         type : String,
         required : true
     },
-    
-    geo : {
-        type : String,
-        required : false
-    },
-    
-    coordinates : {
-        type : String,
-        required : false
+
+    hashtags: {
+        type: Array,
+        required: false
     },
     
     location : {
         type : String,
-        required : true
+        required : false
     },
 
     tweet : {
@@ -29,10 +24,15 @@ const tweetData = new Schema({
         required : true
     },
 
-    geo_enabled : {
+    verified : {
         type : Boolean,
         required: true
+    },
+
+    created_at : {
+        type : Date,
+        default: Date.now
     }
 });
 
-module.exports = mongoose.model('tweet', tweetData);
+module.exports = mongoose.model('Tweet', Tweet);

@@ -4,6 +4,9 @@ var Twit = require('twit');
 
 var config = require('./config');
 var T = new Twit(config);
+const Tweet = require('./Tweet')
+
+
 
 const db = config.mongoURI
 mongoose
@@ -49,10 +52,20 @@ function populateDB() {
 
     var trackList = ["#climatechange", "#climatechangeisreal", "#actonclimate", "#globalwarming", "#climatechangehoax", 
                  "#climatedeniers", "#climatechangeisfalse", "#globalwarminghoax", "#climatechangenotreal", "climate change", 
-                 "global warming", "climate hoax"];
+                 "global warming", "climate hoax", "lightningstrike", "wildfires", "glassfires", "hurricane", "blizzards", "wildfires"];
 
     function addToDB(data, err) { 
-        console.log(data);
+        console.log(data.entities);
+        const newTweet = new Tweet({
+            tweet: data.text,
+            hashtags: data.entities.hashtags,
+            created_at: data.created_at,
+            name: data.user.name,
+            location: data.user.location,
+            verified: data.user.verified
+        });
+        newTweet.save()
+                .then((data) => console.log("Saved a tweet to DB"));
     }
 
     var stream = T.stream('statuses/filter', { track : trackList });
